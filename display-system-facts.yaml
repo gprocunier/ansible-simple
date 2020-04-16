@@ -1,0 +1,9 @@
+---
+- name: "Display system facts"
+  gather_facts: yes
+  hosts: all
+  tasks:
+
+  - name: "Display system facts"
+    debug:
+      var: hostvars[inventory_hostname]
