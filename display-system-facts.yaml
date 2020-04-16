@@ -7,3 +7,6 @@
   - name: "Display system facts"
     debug:
       var: hostvars[inventory_hostname]
+
+  - pause:
+      minutes: 1
