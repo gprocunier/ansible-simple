@@ -1,5 +1,5 @@
 ---
-- name: "Display system facts"
+- name: "Display AWS EC2 facts"
   gather_facts: no
   hosts: localhost
   tasks:

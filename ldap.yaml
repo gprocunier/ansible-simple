@@ -1,0 +1,10 @@
+---
+- name: "LDAP test"
+  gather_facts: no
+  hosts: localhost
+  tasks:
+      
+    - name: Make sure we have a parent entry for users
+      ldap_entry:
+        dn: ou=users,dc=example,dc=com
+        objectClass: organizationalUnit
