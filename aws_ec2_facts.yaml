@@ -5,6 +5,7 @@
   tasks:
 
     - ec2_instance_facts:
+        region: "ca-central-1"
       register: ec2_facts
 
     - debug:
