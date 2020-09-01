@@ -8,5 +8,10 @@
         gather_subset: all
       register: facts
 
+    - when: ansible_network_os == "junos"
+      junos_facts:
+        gather_subset: all
+      register: facts
+
     - debug:
         var: facts
