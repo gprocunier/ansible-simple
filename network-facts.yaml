@@ -1,0 +1,11 @@
+---
+- name: "Get Facts from network devices"
+  gather_facts: no
+  hosts: all
+  tasks:
+    - when: ansible_network_os is "ios"
+      ios_facts:
+        register: facts
+
+    - debug:
+        var: facts
