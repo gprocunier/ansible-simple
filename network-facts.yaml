@@ -5,7 +5,8 @@
   tasks:
     - when: ansible_network_os == "ios"
       ios_facts:
-        register: facts
+        gather_subset: all
+      register: facts
 
     - debug:
         var: facts
