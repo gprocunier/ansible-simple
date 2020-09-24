@@ -3,13 +3,7 @@
   gather_facts: no
   hosts: all
   tasks:
-    - when: ansible_network_os == "ios"
-      ios_facts:
-        gather_subset: all
-      register: facts
-
-    - when: ansible_network_os == "junos"
-      junos_facts:
+    - ios_facts:
         gather_subset: all
       register: facts
 
