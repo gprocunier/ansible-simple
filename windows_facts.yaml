@@ -1,0 +1,8 @@
+---
+- name: "Get Windows facts"
+  gather_facts: yes
+  hosts: windows
+  tasks: 
+
+  - debug:
+      var: ansible_facts
