@@ -1,0 +1,24 @@
+as_number: 65500
+topo:
+  r1:
+    role: pe
+    interfaces:
+      - name: GigabitEthernet1
+        role: mgmt
+      - name: GigabitEthernet2
+        role: bgp
+      - name: GigabitEthernet3
+        role: bgp
+      - name: GigabitEthernet4
+        role: client
+  r2:
+    role: pe
+    interfaces:
+      - name: GigabitEthernet1
+        role: mgmt
+      - name: GigabitEthernet2
+        role: bgp
+      - name: GigabitEthernet3
+        role: bgp
+      - name: GigabitEthernet4
+        role: client

@@ -6,3 +6,17 @@
     lines:
       - ip ospf network point-to-point
 
+- name: "Configure OSPF interfaces"
+  ios_config:
+    parents:
+      - interface GigabitEthernet3
+    lines:
+      - ip ospf network point-to-point
+
+- name: "Configure OSPF router"
+  ios_config:
+    parents:
+      - router ospf 1
+    lines:
+      - network 10.0.0.0 0.0.0.255 area 0
+      - network 10.255.255.0 0.0.0.255 area 0

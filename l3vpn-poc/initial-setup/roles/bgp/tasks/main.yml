@@ -1,0 +1,50 @@
+---
+
+- name: "Configure BGP ibgp peer-group"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    lines:
+    - "neighbor ibgp peer-group"
+    - "neighbor ibgp remote-as {{ as_number }}"
+    - "neighbor ibgp update-source Loopback 0"
+
+- name: "Configure BGP neighbors"
+  when: inventory_hostname == "r1"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    lines:
+    - "neighbor 10.255.255.2 peer-group ibgp"
+    - "neighbor 10.255.255.3 peer-group ibgp"
+    - "neighbor 10.255.255.4 peer-group ibgp"
+
+- name: "Configure BGP neighbors"
+  when: inventory_hostname == "r2"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    lines:
+    - "neighbor 10.255.255.1 peer-group ibgp"
+    - "neighbor 10.255.255.3 peer-group ibgp"
+    - "neighbor 10.255.255.4 peer-group ibgp"
+
+- name: "Configure BGP neighbors"
+  when: inventory_hostname == "r3"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    lines:
+    - "neighbor 10.255.255.2 peer-group ibgp"
+    - "neighbor 10.255.255.1 peer-group ibgp"
+    - "neighbor 10.255.255.4 peer-group ibgp"
+
+- name: "Configure BGP neighbors"
+  when: inventory_hostname == "r4"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    lines:
+    - "neighbor 10.255.255.2 peer-group ibgp"
+    - "neighbor 10.255.255.3 peer-group ibgp"
+    - "neighbor 10.255.255.1 peer-group ibgp"

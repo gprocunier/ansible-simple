@@ -1,0 +1,10 @@
+request:
+  ticket_no: "R65223"
+  vpn_name: "Admin-regionA"
+  l3vpn:
+    r1:
+      vlan: 102
+      ip_address: 10.2.2.1/24
+    r2:
+      vlan: 104
+      ip_address: 10.2.3.1/24

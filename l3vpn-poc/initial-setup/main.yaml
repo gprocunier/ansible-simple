@@ -9,3 +9,15 @@
     
   - include_role:
       name: ospf
+
+  - include_role:
+      name: loopbacks
+
+  - include_role:
+      name: lldp
+
+  - include_role:
+      name: bgp
+
+  - cisco.ios.ios_config:
+      save_when: always

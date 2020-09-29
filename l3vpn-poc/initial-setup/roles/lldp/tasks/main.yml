@@ -1,0 +1,15 @@
+---
+- name: Enable LLDP service
+  cisco.ios.ios_lldp:
+    state: present
+
+- name: Enable LLDP on Gig2 and Gig3
+  cisco.ios.ios_lldp_interfaces:
+    config:
+    - name: GigabitEthernet2
+      receive: true
+      transmit: true
+    - name: GigabitEthernet3
+      receive: true
+      transmit: true
+    state: merged
