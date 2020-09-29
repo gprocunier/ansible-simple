@@ -1,0 +1,8 @@
+---
+- name: "Configure OSPF interfaces"
+  ios_config:
+    parents:
+      - interface GigabitEthernet2
+    lines:
+      - ip ospf network point-to-point
+

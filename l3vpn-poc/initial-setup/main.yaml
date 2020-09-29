@@ -1,0 +1,11 @@
+---
+- name: "Initial setup"
+  gather_facts: no
+  hosts: core_ipvpn
+  tasks: 
+
+  - ios_facts:
+    register: test
+    
+  - include_role:
+      name: ospf
