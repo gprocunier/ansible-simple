@@ -1,0 +1,17 @@
+---
+- name: "Verify L3VPN status"
+  gather_facts: no
+  hosts: core_ipvpn
+  tasks:
+  
+  - name: Check routes
+    when: inventory_hostname in request.l3vpn
+    cisco.ios.ios_command:
+      commands: "show ip route vrf {{ request.vpn_name }}"
+      retries: 1
+      wait_for:
+      - result[0] contains '10.2.3.0/24'
+    register: show_route_output
+  
+  - debug:
+      var: show_route_output

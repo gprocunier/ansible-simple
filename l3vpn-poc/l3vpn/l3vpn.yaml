@@ -1,0 +1,23 @@
+---
+- name: "Configurer L3VPN from request"
+  gather_facts: no
+  hosts: core_ipvpn
+  tasks:
+
+  - name: Initialize command list
+    set_fact:
+      command_list: []
+
+  - name: Execute role create-l3vpn when state is present
+    when: inventory_hostname in request.l3vpn and request.l3vpn[inventory_hostname].state == 'present'
+    include_role:
+      name: create-l3vpn
+
+  - name: Execute role delete-l3vpn when state is absent
+    when: inventory_hostname in request.l3vpn and request.l3vpn[inventory_hostname].state == 'absent'
+    include_role:
+      name: delete-l3vpn
+
+  - when: inventory_hostname in request.l3vpn
+    include_role:
+      name: config-summary

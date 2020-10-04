@@ -1,0 +1,31 @@
+---
+- name: Check if prefix exists
+  uri:
+    url: "{{ netbox_url }}/ipam/prefixes?prefix={{ prefix }}"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: search_prefix
+
+- name: "Delete prefix if exists"
+  when: search_prefix.json.count == 1
+  uri:
+    url: "{{ netbox_url }}/ipam/prefixes/{{ search_prefix.json.results[0].id }}/"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: DELETE
+    status_code: 204
+    body_format: json
+  register: new_prefix
+
+- when: search_prefix.json.count > 0
+  debug: 
+    msg: Prefix {{ prefix }} successfully deleted.
+
+- when: search_prefix.json.count == 0
+  debug: 
+    msg: Prefix {{ prefix }} not found.

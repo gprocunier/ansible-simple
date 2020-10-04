@@ -48,3 +48,55 @@
     - "neighbor 10.255.255.2 peer-group ibgp"
     - "neighbor 10.255.255.3 peer-group ibgp"
     - "neighbor 10.255.255.1 peer-group ibgp"
+
+
+- name: "Configure VPNV4 neighbors"
+  when: inventory_hostname == "r1"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    - "address-family vpnv4"
+    lines:
+    - "neighbor 10.255.255.2 activate"
+    - "neighbor 10.255.255.3 activate"
+    - "neighbor 10.255.255.4 activate"
+
+- name: "Configure VPNV4 neighbors"
+  when: inventory_hostname == "r2"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    - "address-family vpnv4"
+    lines:
+    - "neighbor 10.255.255.1 activate"
+    - "neighbor 10.255.255.3 activate"
+    - "neighbor 10.255.255.4 activate"
+
+- name: "Configure VPNV4 neighbors"
+  when: inventory_hostname == "r3"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    - "address-family vpnv4"
+    lines:
+    - "neighbor 10.255.255.1 activate"
+    - "neighbor 10.255.255.2 activate"
+    - "neighbor 10.255.255.4 activate"
+
+- name: "Configure VPNV4 neighbors"
+  when: inventory_hostname == "r4"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    - "address-family vpnv4"
+    lines:
+    - "neighbor 10.255.255.2 activate"
+    - "neighbor 10.255.255.3 activate"
+    - "neighbor 10.255.255.1 activate"
+
+- name: "Bring up client interface"
+  cisco.ios.ios_interfaces:
+    config:
+    - name: "GigabitEthernet4"
+      description: "Client interface"
+      enabled: yes

@@ -1,0 +1,55 @@
+---
+- name: Check if VRF exists
+  uri:
+    url: "{{ netbox_url }}/ipam/vrfs?name={{ vrf_name }}"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: search_vrf
+
+- name: Fail if VRF not found. 
+  when: search_vrf.json.results.count == 0
+  fail:
+    msg: VRF not found. 
+
+- name: Check if prefix exists
+  uri:
+    url: "{{ netbox_url }}/ipam/prefixes?prefix={{ prefix }}"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: search_prefix
+
+- name: "Prefix exists, set new_prefix variable"
+  when: search_prefix.json.count > 0
+  set_fact:
+    new_prefix: "{{ search_prefix.json.results[0] }}"
+
+- name: "Create prefix if does not exists"
+  when: search_prefix.json.count == 0
+  uri:
+    url: "{{ netbox_url }}/ipam/prefixes/"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: POST
+    status_code: 201
+    body:
+      prefix: "{{ prefix }}"
+      vrf: "{{ search_vrf.json.results[0].id }}"
+    body_format: json
+  register: new_prefix
+
+- when: search_prefix.json.count > 0
+  debug: 
+    msg: Prefix {{ prefix }} already assigned.
+
+- when: search_prefix.json.count == 0
+  debug: 
+    msg: Prefix {{ prefix }} saved successfully.

@@ -1,0 +1,38 @@
+---
+- name: Check if VRF exists
+  uri:
+    url: "{{ netbox_url }}/ipam/vrfs?name={{ vrf_name }}"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: search_vrf
+
+- name: "VRF exists, set search_vrf variable"
+  when: search_vrf.json.count > 0
+  set_fact:
+    new_prefix: "{{ search_vrf.json.results[0] }}"
+
+- name: "Create VRF if does not exists"
+  when: search_vrf.json.count == 0
+  uri:
+    url: "{{ netbox_url }}/ipam/vrfs/"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: POST
+    status_code: 201
+    body:
+      name: "{{ vrf_name }}"
+    body_format: json
+  register: new_vrf
+
+- when: search_vrf.json.count > 0
+  debug: 
+    msg: VRF {{ vrf_name }} already assigned.
+
+- when: search_vrf.json.count == 0
+  debug: 
+    msg: VRF {{ vrf_name }} saved successfully.

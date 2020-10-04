@@ -1,0 +1,24 @@
+request:
+  ticket_no: "R65779"
+  vpn_name: "Ops-regionC"
+  state: present
+  rt: 65500:906
+  l3vpn:
+    r1:
+      state: present
+      rd: 65500:1906
+      vlan: 902
+      prefix: 10.1.4.0/24
+      ip_address: 10.1.2.1/24
+    r2:
+      state: present
+      rd: 65500:2906
+      vlan: 904
+      prefix: 10.2.5.0/24
+      ip_address: 10.2.3.1/24
+    r3:
+      state: present
+      rd: 65500:3906
+      vlan: 904
+      prefix: 10.3.5.0/24
+      ip_address: 10.3.3.1/24

@@ -1,0 +1,28 @@
+---
+- name: "Create request directory"
+  when: command_list | count > 0
+  local_action: 
+    module: file
+    state: directory
+    path: "config-output/{{ request.ticket_no }}"
+  check_mode: no
+
+- name: "Save configurations"
+  when: command_list | count > 0
+  local_action: 
+    module: copy
+    content: "{{ command_list | join('\n') }}"
+    dest: "config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"
+  check_mode: no
+
+- name: "Configuration status"
+  when: command_list | count == 0
+  debug:
+    msg: "Device {{ inventory_hostname }} is already configured for request {{ request.ticket_no }}"
+
+- name: "Configuration status"
+  when: command_list | count > 0
+  debug:
+    msg: 
+    - "Device {{ inventory_hostname }} needs to be configured"
+    - "Configuration file located at: config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"

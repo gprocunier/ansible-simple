@@ -1,0 +1,36 @@
+---
+- name: "Assign new prefixe"
+  gather_facts: no
+  hosts: localhost
+  tasks:
+
+  - name: Assign VRF when state is present
+    when: request.state == 'present'
+    include_role:
+      name: assign-vrf
+    vars:
+      vrf_name: "{{ request.vpn_name }}"
+      
+  - name: Assign IP prefixes when state is present
+    loop: "{{ request.l3vpn | dict2items }}"
+    when: item.value.state == 'present'
+    include_role:
+      name: assign-prefix
+    vars:
+      prefix: "{{ item.value.prefix }}"
+      vrf_name: "{{ request.vpn_name }}"
+
+  - name: Remove IP prefixe
+    loop: "{{ request.l3vpn | dict2items }}"
+    when: item.value.state == 'absent'
+    include_role:
+      name: delete-prefix
+    vars:
+      prefix: "{{ item.value.prefix }}"
+      vrf_name: "{{ request.vpn_name }}"
+
+  - when: request.state == 'absent'
+    include_role:
+      name: delete-vrf
+    vars:
+      vrf_name: "{{ request.vpn_name }}"

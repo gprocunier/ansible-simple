@@ -1,0 +1,78 @@
+---
+- name: "Looking for Client interface on PE"
+  set_fact:
+    client_interface: "{{ (topo[ inventory_hostname ].interfaces | selectattr('role', 'equalto', 'client') | list)[0] }}"
+
+- name: "Looking for Client interface on PE"
+  set_fact:
+    client_interface_fullname: "{{ client_interface.name  }}.{{ request.l3vpn[inventory_hostname].vlan }}"
+
+- debug:
+    msg: 
+    - "Client interface based on topology"
+    - "{{ client_interface }}"
+    - "{{ client_interface_fullname }}"
+
+
+- name: "Configure new VRF {{ request.vpn_name }}"
+  cisco.ios.ios_vrf:
+    name: "{{ request.vpn_name }}"
+    description: "{{ request.vpn_name }} - Ref:{{ request.ticket_no }}"
+    rd: "{{ request.l3vpn[inventory_hostname].rd }}"
+    route_both:
+    - "{{ request.rt }}"
+    - "{{ request.rt }}"
+  register: create_vrf_output
+
+- name: "Configure PE client sub-interface VLAN"
+  cisco.ios.ios_config: 
+    parents:
+    - "interface {{ client_interface_fullname }}"
+    lines: 
+    - "encapsulation dot1Q {{ request.l3vpn[inventory_hostname].vlan }}"
+    - "description {{ request.vpn_name }} - Ref:{{ request.ticket_no }}"
+    - "vrf forwarding {{ request.vpn_name }}"
+  register: create_subif_output
+
+- name: "Configure PE client L3 interfaces"
+  cisco.ios.ios_l3_interfaces:
+    config:
+    - name: "{{ client_interface_fullname }}"
+      ipv4:
+      - address: "{{ request.l3vpn[inventory_hostname].ip_address }}"
+  register: create_l3intf_output
+
+- name: "Configure BGP advertisement"
+  cisco.ios.ios_config:
+    parents:
+    - "router bgp {{ as_number }}"
+    - "address-family ipv4 vrf {{ request.vpn_name }}"
+    lines:
+    - "redistribute connected"
+  register: create_bgp_output
+
+
+
+- name: "VRF: Add configuration lines to command list"
+  when: create_vrf_output.changed 
+  set_fact:
+    command_list: "{{ command_list + create_vrf_output.commands }}"
+
+- name: "SUB-INTERFACE: Add configuration lines to command list"
+  when: create_subif_output.changed 
+  set_fact:
+    command_list: "{{ command_list + create_subif_output.commands }}"
+
+- name: "L3-INTERFACE: Add configuration lines to command list"
+  when: create_l3intf_output.changed 
+  set_fact:
+    command_list: "{{ command_list + create_l3intf_output.commands }}"
+
+- name: "BGP: Add configuration lines to command list"
+  when: create_bgp_output.changed 
+  set_fact:
+    command_list: "{{ command_list + create_bgp_output.commands }}"
+
+- name: Display all commands
+  debug:
+    msg: "{{ command_list }}"

@@ -1,0 +1,31 @@
+---
+- name: Check if VRF exists
+  uri:
+    url: "{{ netbox_url }}/ipam/vrfs?name={{ vrf_name }}"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: search_vrf
+
+- name: "Delete VRF if exists"
+  when: search_vrf.json.count == 1
+  uri:
+    url: "{{ netbox_url }}/ipam/vrfs/{{ search_vrf.json.results[0].id }}/"
+    headers:
+      Accept: application/json
+      Authorization: "Token {{ netbox_token }}"
+    method: DELETE
+    status_code: 204
+    body_format: json
+  register: new_vrf
+
+- when: search_vrf.json.count > 0
+  debug: 
+    msg: VRF {{ vrf_name }} successfully deleted.
+
+- when: search_vrf.json.count == 0
+  debug: 
+    msg: VRF {{ vrf_name }} not found.
