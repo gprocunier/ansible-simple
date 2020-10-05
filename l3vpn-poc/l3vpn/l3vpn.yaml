@@ -21,8 +21,8 @@
     include_role:
       name: delete-l3vpn
 
-  - name: Execute role test-l3vpn when state is present
-    when: inventory_hostname in request.l3vpn and request.l3vpn[inventory_hostname].state == 'present'
+  - name: Execute role test-l3vpn 
+    when: inventory_hostname in request.l3vpn 
     include_role:
       name: test-l3vpn
 
