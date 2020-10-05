@@ -14,7 +14,7 @@
     - "{{ client_interface_fullname }}"
 
 
-- name: "Configure new VRF {{ request.vpn_name }}"
+- name: "Configure VRF {{ request.vpn_name }}"
   cisco.ios.ios_vrf:
     name: "{{ request.vpn_name }}"
     description: "{{ request.vpn_name }} - Ref:{{ request.ticket_no }}"
