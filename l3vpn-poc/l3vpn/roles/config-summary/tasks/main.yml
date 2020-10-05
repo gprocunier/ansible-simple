@@ -3,7 +3,7 @@
   local_action: 
     module: file
     state: directory
-    path: "config-output/{{ request.ticket_no }}"
+    path: "config-output"
   check_mode: no
 
 # - name: "Save configurations"
