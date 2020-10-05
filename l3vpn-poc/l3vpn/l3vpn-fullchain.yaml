@@ -1,0 +1,4 @@
+---
+- import_playbook: "l3vpn-config.yaml"
+- import_playbook: "l3vpn-tests.yaml"
+- import_playbook: "l3vpn-summary.yaml"

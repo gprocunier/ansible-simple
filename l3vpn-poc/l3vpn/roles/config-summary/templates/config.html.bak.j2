@@ -1,13 +1,13 @@
 <html>
 <body>
 
-<h1>Requete {{ request.ticket_no }}</h1>
+<h1>Requête {{ request.ticket_no }}</h1>
 
 <div class=summary>
     <table style="width:100%;">
         <tr>
             <td style="width:140px;">
-                Requete
+                Requête
             </td>
             <td >
                 {{ request.ticket_no }}
@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td>
-                Etat voulu
+                État voulu
             </td>
             <td>
                 {{ request.state }}
@@ -50,7 +50,7 @@
                         <td>{{ site.key }}</td>
                     </tr>
                     <tr>
-                        <td>Etat voulu</td>
+                        <td>État voulu</td>
                         <td>{{ site.value.state }}</td>
                     </tr>
                     <tr>
@@ -82,7 +82,7 @@
 <h4>Validation des routes</h4>
 
 <table>
-{% for result in test_status[site.key].show_route_output.results %}
+{% for result in hostvars[site.key].show_route_output.results %}
     <tr>
         <td>{{ result.item.value.prefix }} </td>
         {% if result.failed %}
@@ -95,7 +95,7 @@
 {% endfor %}
 </table>
 
-{% if config_status[site.key].command_list | count == 0 %}
+{% if hostvars[site.key].command_list | count == 0 %}
 <h4 style="color:rgb(32, 161, 0)">Configuration a jour. Aucune modification requise.</h4>
 
 {% else %}

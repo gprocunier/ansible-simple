@@ -17,12 +17,9 @@
       include_role:
         name: delete-l3vpn
 
-    - name: Execute role test-l3vpn
-      when: inventory_hostname in request.l3vpn
-      include_role:
-        name: test-l3vpn
+    - set_fact:
+        config_status: "{{ hostvars }}"
 
-  post_tasks:
-    - run_once: yes
-      include_role:
-        name: config-summary
+    - set_stats:
+        data:
+          config_status: "{{ hostvars }}"

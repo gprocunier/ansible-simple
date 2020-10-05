@@ -1,0 +1,16 @@
+---
+- name: "Configurer L3VPN from request"
+  gather_facts: no
+  hosts: core_ipvpn
+  tasks:
+    - name: Execute role test-l3vpn
+      when: inventory_hostname in request.l3vpn
+      include_role:
+        name: test-l3vpn
+
+    - set_fact:
+        test_status: "{{ hostvars }}"
+
+    - set_stats:
+        data:
+          test_status: "{{ hostvars }}"
