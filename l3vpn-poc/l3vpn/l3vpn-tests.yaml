@@ -8,9 +8,9 @@
       include_role:
         name: test-l3vpn
 
-    - set_fact:
-        test_status: "{{ hostvars }}"
-
     - set_stats:
         data:
           test_status: "{{ hostvars }}"
+
+    - set_fact:
+        test_status: "{{ hostvars }}"

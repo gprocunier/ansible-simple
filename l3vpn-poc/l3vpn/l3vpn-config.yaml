@@ -17,9 +17,10 @@
       include_role:
         name: delete-l3vpn
 
-    - set_fact:
-        config_status: "{{ hostvars }}"
-
     - set_stats:
         data:
           config_status: "{{ hostvars }}"
+          
+    - set_fact:
+        config_status: "{{ hostvars }}"
+
