@@ -1,10 +1,10 @@
 ---
-- name: "Create request directory"
-  local_action: 
-    module: file
-    state: directory
-    path: "config-output"
-  check_mode: no
+# - name: "Create request directory"
+#   local_action: 
+#     module: file
+#     state: directory
+#     path: "config-output"
+#   check_mode: no
 
 # - name: "Save configurations"
 #   when: command_list | count > 0
@@ -28,7 +28,7 @@
 
 - name: Template config file
   template:
-    dest: "config-output/{{ request.ticket_no }}.html"
+    dest: "{{ request.ticket_no }}.html"
     src: "config.html.j2"
   check_mode: no
 
@@ -36,7 +36,7 @@
   amazon.aws.aws_s3:
     bucket: mouimet-l3vpn-config
     object: "{{ request.ticket_no }}.html"
-    src: "config-output/{{ request.ticket_no }}.html"
+    src: "{{ request.ticket_no }}.html"
     mode: put
     permission: 
     - public-read
