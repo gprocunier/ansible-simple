@@ -103,7 +103,7 @@
 
 <div class=config>
     <p>
-        {% for command in hostvars[site.key].command_list %}
+        {% for command in config_status[site.key].command_list %}
         {{ command }}<br>
         {% endfor %}
     </p>
