@@ -1,13 +1,13 @@
 <html>
 <body>
 
-<h1>Request {{ request.ticket_no }}</h1>
+<h1>Requête {{ request.ticket_no }}</h1>
 
 <div class=summary>
     <table style="width:100%;">
         <tr>
             <td style="width:140px;">
-                Request no
+                Requête
             </td>
             <td >
                 {{ request.ticket_no }}
@@ -15,7 +15,7 @@
         </tr>
         <tr>
             <td>
-                VRF Name
+                Nom du VRF
             </td>
             <td>
                 {{ request.vpn_name }}
@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td>
-                State requested
+                État voulu
             </td>
             <td>
                 {{ request.state }}
@@ -46,11 +46,11 @@
                 {% for site in request.l3vpn | dict2items %}
                 <table style="width:100%;">
                     <tr>
-                        <td style="width:75px;">Name</td>
+                        <td style="width:75px;">Nom</td>
                         <td>{{ site.key }}</td>
                     </tr>
                     <tr>
-                        <td>State</td>
+                        <td>État voulu</td>
                         <td>{{ site.value.state }}</td>
                     </tr>
                     <tr>
@@ -62,11 +62,11 @@
                         <td>{{ site.value.vlan }}</td>
                     </tr>
                     <tr>
-                        <td>Prefix</td>
+                        <td>Prefixe</td>
                         <td>{{ site.value.prefix }}</td>
                     </tr>
                     <tr>
-                        <td>IP address</td>
+                        <td>Adresse IP</td>
                         <td>{{ site.value.ip_address }}</td>
                     </tr>
                 </table>
@@ -77,7 +77,7 @@
 </div>
 
 {% for site in request.l3vpn | dict2items %}
-<h1>Configuration for device {{ site.key }}</h1>
+<h1>Configuration pour {{ site.key }}</h1>
 
 <h4>Validation des routes</h4>
 
