@@ -1,0 +1,136 @@
+<html>
+<body>
+
+<h1>Request {{ request.ticket_no }}</h1>
+
+<div class=summary>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:140px;">
+                Request no
+            </td>
+            <td >
+                {{ request.ticket_no }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                VRF Name
+            </td>
+            <td>
+                {{ request.vpn_name }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Route-target
+            </td>
+            <td>
+                {{ request.rt }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                State requested
+            </td>
+            <td>
+                {{ request.state }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Sites
+            </td>
+            <td>
+                {% for site in request.l3vpn | dict2items %}
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:75px;">Name</td>
+                        <td>{{ site.key }}</td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td>{{ site.value.state }}</td>
+                    </tr>
+                    <tr>
+                        <td>RD</td>
+                        <td>{{ site.value.rd }}</td>
+                    </tr>
+                    <tr>
+                        <td>VLAN</td>
+                        <td>{{ site.value.vlan }}</td>
+                    </tr>
+                    <tr>
+                        <td>Prefix</td>
+                        <td>{{ site.value.prefix }}</td>
+                    </tr>
+                    <tr>
+                        <td>IP address</td>
+                        <td>{{ site.value.ip_address }}</td>
+                    </tr>
+                </table>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% for site in request.l3vpn | dict2items %}
+<h1>Configuration for device {{ site.key }}</h1>
+
+<h4>Validation des routes</h4>
+
+<table>
+{% for result in hostvars[site.key].show_route_output.results %}
+    <tr>
+        <td>{{ result.item.value.prefix }} </td>
+        {% if result.failed %}
+            <td style="color:red;">Absent</td>
+        {% else %}
+            <td style="color:rgb(32, 161, 0);">Present</td>
+        {% endif %}
+    </tr>
+
+{% endfor %}
+</table>
+
+{% if hostvars[site.key].command_list | count == 0 %}
+<h4 style="color:rgb(32, 161, 0)">Configuration a jour. Aucune modification requise.</h4>
+
+{% else %}
+<h4 style="color:rgb(253, 146, 23)">Configuration a appliquer</h4>
+
+<div class=config>
+    <p>
+        {% for command in hostvars[site.key].command_list %}
+        {{ command }}<br>
+        {% endfor %}
+    </p>
+</div>
+{% endif %}
+{% endfor %}
+
+</body>
+</html>
+<style>
+    table, th, td {
+        padding: 3px;
+    }
+
+    table {
+        border: 1px solid rgb(204, 204, 204);
+    }
+    
+    .summary {
+        padding: 5px;
+        width: 100%;
+    }
+
+    .config {
+        font-family: monospace;
+        background-color: rgb(230, 230, 230);
+        width: 100%;
+        padding: 5px;
+    }
+</style>

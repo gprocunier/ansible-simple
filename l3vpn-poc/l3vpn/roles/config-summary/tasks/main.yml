@@ -1,28 +1,49 @@
 ---
 - name: "Create request directory"
-  when: command_list | count > 0
   local_action: 
     module: file
     state: directory
     path: "config-output/{{ request.ticket_no }}"
   check_mode: no
 
-- name: "Save configurations"
-  when: command_list | count > 0
-  local_action: 
-    module: copy
-    content: "{{ command_list | join('\n') }}"
-    dest: "config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"
+# - name: "Save configurations"
+#   when: command_list | count > 0
+#   local_action: 
+#     module: copy
+#     content: "{{ command_list | join('\n') }}"
+#     dest: "config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"
+#   check_mode: no
+
+# - name: "Configuration status"
+#   when: command_list | count == 0
+#   debug:
+#     msg: "Device {{ inventory_hostname }} is already configured for request {{ request.ticket_no }}"
+
+# - name: "Configuration status"
+#   when: command_list | count > 0
+#   debug:
+#     msg: 
+#     - "Device {{ inventory_hostname }} needs to be configured"
+#     - "Configuration file located at: config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"
+
+- name: Template config file
+  template:
+    dest: "config-output/{{ request.ticket_no }}.html"
+    src: "config.html.j2"
   check_mode: no
 
-- name: "Configuration status"
-  when: command_list | count == 0
-  debug:
-    msg: "Device {{ inventory_hostname }} is already configured for request {{ request.ticket_no }}"
+- name: Upload request summary to S3
+  amazon.aws.aws_s3:
+    bucket: mouimet-l3vpn-config
+    object: "{{ request.ticket_no }}.html"
+    src: "config-output/{{ request.ticket_no }}.html"
+    mode: put
+    permission: 
+    - public-read
+  check_mode: no
+  register: s3_upload
 
-- name: "Configuration status"
-  when: command_list | count > 0
-  debug:
+- debug:
     msg: 
-    - "Device {{ inventory_hostname }} needs to be configured"
-    - "Configuration file located at: config-output/{{ request.ticket_no }}/{{ inventory_hostname }}.conf"
+    - "Vous pouvez consulter le rapport du changement a l'URL suivant:"
+    - "{{ s3_upload.url.split('?')[0] }}"

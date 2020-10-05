@@ -1,3 +1,4 @@
 ---
 collections:
 - cisco.ios
+- amazon.aws

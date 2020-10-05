@@ -4,6 +4,9 @@
   hosts: core_ipvpn
   tasks:
 
+  - debug:
+      var: hostvars
+
   - name: Initialize command list
     set_fact:
       command_list: []
@@ -18,6 +21,13 @@
     include_role:
       name: delete-l3vpn
 
-  - when: inventory_hostname in request.l3vpn
+  - name: Execute role test-l3vpn when state is present
+    when: inventory_hostname in request.l3vpn and request.l3vpn[inventory_hostname].state == 'present'
+    include_role:
+      name: test-l3vpn
+
+  post_tasks:
+
+  - run_once: yes
     include_role:
       name: config-summary
