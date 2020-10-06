@@ -102,13 +102,16 @@
         <tr>
             {% if result.failed %}
                 <td style="color:red;">Non fonctionnel</td>
+                <td>Test {{ result.invocation.module_args.dest }}</td>
             {% else %}
                 <td style="color:rgb(32, 161, 0);">Fonctionnel</td>
+                <td>Test {{ result.invocation.module_args.dest }}</td>
+                <td>{{ result.commands[0] }} </td>
+                <td>Perte de paquet: {{ result.packet_loss }} </td>
+                <td>Paquets transmits: {{ result.packets_tx }} </td>
+                <td>Paquets recus: {{ result.packets_rx }} </td>
             {% endif %}
-            <td>{{ result.commands[0] | default('') }} </td>
-            <td>Perte de paquet: {{ result.packet_loss }} </td>
-            <td>Paquets transmits: {{ result.packets_tx }} </td>
-            <td>Paquets recus: {{ result.packets_rx }} </td>
+
         </tr>
     {% endfor %}
     </table>
