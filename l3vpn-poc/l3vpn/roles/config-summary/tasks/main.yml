@@ -11,12 +11,12 @@
     object: "{{ request.ticket_no }}.html"
     src: "{{ request.ticket_no }}.html"
     mode: put
-    permission: 
-    - public-read
+    permission:
+      - public-read
   check_mode: no
   register: s3_upload
 
 - debug:
-    msg: 
-    - "Vous pouvez consulter le rapport du changement a l'URL suivant:"
-    - "{{ s3_upload.url.split('?')[0] }}"
+    msg:
+      - "Vous pouvez consulter le rapport du changement a l'URL suivant:"
+      - "{{ s3_upload.url.split('?')[0] }}"
