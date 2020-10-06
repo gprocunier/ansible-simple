@@ -5,9 +5,22 @@
     commands: "show ip route vrf {{ request.vpn_name }}"
     retries: 1
     wait_for:
-    - result[0] contains '{{ item.value.prefix }}'
+      - result[0] contains '{{ item.value.prefix }}'
   register: show_route_output
   ignore_errors: yes
-  
+
+- name: Ping test
+  loop: "{{ request.l3vpn | dict2items }}"
+  cisco.ios.ios_ping:
+    dest: "{{ item.value.ip_address.split('/')[0] }}"
+    source: "{{ request.l3vpn[inventory_hostname].ip_address.split('/')[0] }}"
+    vrf: "{{ request.vpn_name }}"
+  register: ping_output
+  ignore_errors: yes
+  check_mode: no
+
 - debug:
     var: show_route_output
+
+- debug:
+    var: ping_output
