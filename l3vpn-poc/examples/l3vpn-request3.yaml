@@ -1,5 +1,5 @@
 request:
-  ticket_no: "R65779"
+  ticket_no: "R65778"
   vpn_name: "Ops-regionC"
   state: present
   rt: 65500:906
