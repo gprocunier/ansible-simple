@@ -105,7 +105,7 @@
             {% else %}
                 <td style="color:rgb(32, 161, 0);">Fonctionnel</td>
             {% endif %}
-            <td>{{ result.commands[0] }} </td>
+            <td>{{ result.commands[0] | default('') }} </td>
             <td>Perte de paquet: {{ result.packet_loss }} </td>
             <td>Paquets transmits: {{ result.packets_tx }} </td>
             <td>Paquets recus: {{ result.packets_rx }} </td>
