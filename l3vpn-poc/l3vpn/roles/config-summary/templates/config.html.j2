@@ -77,38 +77,56 @@
 </div>
 
 {% for site in request.l3vpn | dict2items %}
-<h1>Configuration pour {{ site.key }}</h1>
+    <h1>Configuration pour {{ site.key }}</h1>
 
-<h4>Validation des routes</h4>
+    <h4>Validation des routes</h4>
 
-<table>
-{% for result in test_status[site.key].show_route_output.results %}
-    <tr>
-        <td>{{ result.item.value.prefix }} </td>
-        {% if result.failed %}
-            <td style="color:red;">Absent</td>
-        {% else %}
-            <td style="color:rgb(32, 161, 0);">Present</td>
-        {% endif %}
-    </tr>
+    <table>
+    {% for result in test_status[site.key].show_route_output.results %}
+        <tr>
+            {% if result.failed %}
+                <td style="color:red;">Absent</td>
+            {% else %}
+                <td style="color:rgb(32, 161, 0);">Present</td>
+            {% endif %}
+            <td>{{ result.item.value.prefix }} </td>
+        </tr>
 
-{% endfor %}
-</table>
+    {% endfor %}
+    </table>
 
-{% if config_status[site.key].command_list | count == 0 %}
-<h4 style="color:rgb(32, 161, 0)">Configuration a jour. Aucune modification requise.</h4>
+    <h4>Validation connectivite</h4>
+    
+    <table>
+    {% for result in test_status[site.key].ping_output.results %}
+        <tr>
+            {% if result.failed %}
+                <td style="color:red;">Non fonctionnel</td>
+            {% else %}
+                <td style="color:rgb(32, 161, 0);">Fonctionnel</td>
+            {% endif %}
+            <td>{{ result.commands[0] }} </td>
+            <td>Perte de paquet: {{ result.packet_loss }} </td>
+            <td>Paquets transmits: {{ result.packets_tx }} </td>
+            <td>Paquets recus: {{ result.packets_rx }} </td>
+        </tr>
+    {% endfor %}
+    </table>
 
-{% else %}
-<h4 style="color:rgb(253, 146, 23)">Configuration a appliquer</h4>
+    {% if config_status[site.key].command_list | count == 0 %}
+    <h4 style="color:rgb(32, 161, 0)">Configuration a jour. Aucune modification requise.</h4>
 
-<div class=config>
-    <p>
-        {% for command in config_status[site.key].command_list %}
-        {{ command }}<br>
-        {% endfor %}
-    </p>
-</div>
-{% endif %}
+    {% else %}
+    <h4 style="color:rgb(253, 146, 23)">Configuration a appliquer</h4>
+
+    <div class=config>
+        <p>
+            {% for command in config_status[site.key].command_list %}
+            {{ command }}<br>
+            {% endfor %}
+        </p>
+    </div>
+    {% endif %}
 {% endfor %}
 
 </body>
