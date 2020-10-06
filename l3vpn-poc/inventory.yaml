@@ -6,7 +6,7 @@ all:
         ansible_connection: network_cli
         ansible_user: lab
         ansible_password: lab
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -i /media/psf/Home/private/rhcasalab.key -W %h:%p -q root@w1.rhcasalab.com"'
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -i /Users/mouimet/private/rhcasalab.key -W %h:%p -q root@w1.rhcasalab.com"'
 
       hosts:
         r1:
