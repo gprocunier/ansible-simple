@@ -1,7 +1,7 @@
 request:
   ticket_no: "R69133"
   vpn_name: "Ops-regionC"
-  state: present
+  state: absent
   rt: 65500:906
   l3vpn:
     r1:
