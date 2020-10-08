@@ -8,12 +8,13 @@
     method: GET
     status_code: 200
     body_format: json
+    validate_certs: no
   register: search_vrf
 
-- name: Fail if VRF not found. 
+- name: Fail if VRF not found.
   when: search_vrf.json.results.count == 0
   fail:
-    msg: VRF not found. 
+    msg: VRF not found.
 
 - name: Check if prefix exists
   uri:
@@ -24,6 +25,7 @@
     method: GET
     status_code: 200
     body_format: json
+    validate_certs: no
   register: search_prefix
 
 - name: "Prefix exists, set new_prefix variable"
@@ -44,12 +46,13 @@
       prefix: "{{ prefix }}"
       vrf: "{{ search_vrf.json.results[0].id }}"
     body_format: json
+    validate_certs: no
   register: new_prefix
 
 - when: search_prefix.json.count > 0
-  debug: 
+  debug:
     msg: Prefix {{ prefix }} already assigned.
 
 - when: search_prefix.json.count == 0
-  debug: 
+  debug:
     msg: Prefix {{ prefix }} saved successfully.

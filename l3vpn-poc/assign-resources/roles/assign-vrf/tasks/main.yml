@@ -8,6 +8,7 @@
     method: GET
     status_code: 200
     body_format: json
+    validate_certs: no
   register: search_vrf
 
 - name: "VRF exists, set search_vrf variable"
@@ -27,12 +28,13 @@
     body:
       name: "{{ vrf_name }}"
     body_format: json
+    validate_certs: no
   register: new_vrf
 
 - when: search_vrf.json.count > 0
-  debug: 
+  debug:
     msg: VRF {{ vrf_name }} already assigned.
 
 - when: search_vrf.json.count == 0
-  debug: 
+  debug:
     msg: VRF {{ vrf_name }} saved successfully.

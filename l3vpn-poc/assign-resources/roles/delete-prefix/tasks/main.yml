@@ -8,6 +8,7 @@
     method: GET
     status_code: 200
     body_format: json
+    validate_certs: no
   register: search_prefix
 
 - name: "Delete prefix if exists"
@@ -20,12 +21,13 @@
     method: DELETE
     status_code: 204
     body_format: json
+    validate_certs: no
   register: new_prefix
 
 - when: search_prefix.json.count > 0
-  debug: 
+  debug:
     msg: Prefix {{ prefix }} successfully deleted.
 
 - when: search_prefix.json.count == 0
-  debug: 
+  debug:
     msg: Prefix {{ prefix }} not found.
