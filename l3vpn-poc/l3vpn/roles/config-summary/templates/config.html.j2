@@ -85,9 +85,17 @@
     {% for result in test_status[site.key].show_route_output.results %}
         <tr>
             {% if result.failed %}
-                <td style="color:red;">Absent</td>
+                {% if request.state == "absent" %}
+                    <td style="color:rgb(32, 161, 0);">Absent</td>
+                {% else %}
+                    <td style="color:red;">Absent</td>
+                {% endif %}                
             {% else %}
-                <td style="color:rgb(32, 161, 0);">Present</td>
+                {% if request.state == "absent" %}
+                    <td style="color:red;">Present</td>
+                {% else %}
+                    <td style="color:rgb(32, 161, 0);">Present</td>
+                {% endif %}
             {% endif %}
             <td>{{ result.item.value.prefix }} </td>
         </tr>
@@ -101,10 +109,21 @@
     {% for result in test_status[site.key].ping_output.results %}
         <tr>
             {% if result.failed %}
-                <td style="color:red;">Non fonctionnel</td>
+                {% if request.state == "absent" %}
+                    <td style="color:rgb(32, 161, 0);">Non accessible.</td>
+                {% else %}
+                    <td style="color:red;">Non accessible.</td>
+                {% endif %}
+
                 <td>Test {{ result.invocation.module_args.dest }}</td>
             {% else %}
-                <td style="color:rgb(32, 161, 0);">Fonctionnel</td>
+
+                {% if request.state == "absent" %}
+                    <td style="color:red;">Accessible</td>
+                {% else %}
+                    <td style="color:rgb(32, 161, 0);">Accessible</td>
+                {% endif %}
+
                 <td>Test {{ result.invocation.module_args.dest }}</td>
                 <td>{{ result.commands[0] }} </td>
                 <td>Perte de paquet: {{ result.packet_loss }} </td>
