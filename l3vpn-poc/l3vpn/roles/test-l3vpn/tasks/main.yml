@@ -15,6 +15,7 @@
     dest: "{{ item.value.ip_address.split('/')[0] }}"
     source: "{{ request.l3vpn[inventory_hostname].ip_address.split('/')[0] }}"
     vrf: "{{ request.vpn_name }}"
+    count: 2
   register: ping_output
   ignore_errors: yes
   check_mode: no
