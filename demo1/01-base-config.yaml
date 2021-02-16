@@ -35,7 +35,7 @@
             destination:
               host: "{{ ansible_host }}"
               port_protocol: 
-                eq: 22
+                eq: "22"
       state: replaced
     register: acloutput
   - debug:
