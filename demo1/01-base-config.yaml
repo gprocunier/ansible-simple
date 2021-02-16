@@ -1,0 +1,43 @@
+---
+- name: "Base configuration on all routers"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+  - name: "Base configuration"
+    cisco.ios.ios_system:
+      name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+      domain_name: rhcasalab.com
+      domain_search:
+      - rhcasalab.com
+  
+  - name: "Configure banner"
+    cisco.ios.ios_banner:
+      banner: motd
+      text: "{{ lookup('template', 'banner.j2') }}"
+  
+  - name: Merge provided configuration with device configuration
+    cisco.ios.ios_acls:
+      config:
+      - afi: ipv4
+        acls:
+        - name: ACL-MGMT
+          acl_type: extended
+          aces:
+          - grant: permit
+            protocol_options:
+              tcp:
+                ack: true
+            source:
+              host: 192.168.20.11
+            destination:
+              host: "{{ ansible_host }}"
+              port_protocol: 
+                eq: 22
+      state: replaced
+    register: acloutput
+  - debug:
+      var: acloutput
+

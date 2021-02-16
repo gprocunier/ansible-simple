@@ -1,0 +1,63 @@
+---
+- name: "Base configuration on all routers"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+  - name: "Send slack notification"
+    
+
+  - name: "Get Jumppoint IPs from IPAM"
+    uri:
+      url: "{{ netbox_url }}/ipam/ip-addresses?tag=jumppoint"
+      headers:
+        Accept: application/json
+        Authorization: "Token {{ netbox_token }}"
+      method: GET
+      status_code: 200
+      body_format: json
+    register: jumppoint_ips
+
+  - debug:
+      var: jumppoint_ips
+
+  - name: "Base configuration"
+    cisco.ios.ios_system:
+      name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+      domain_name: rhcasalab.com
+      domain_search:
+      - rhcasalab.com
+  
+  - name: "Configure banner"
+    cisco.ios.ios_banner:
+      banner: motd
+      text: "{{ lookup('template', 'banner.j2') }}"
+
+  - set_fact:
+      mgmt_acl: []
+  
+  - loop: "{{ jumppoint_ips.json.results }}"
+    loop_control:
+      index_var: idx
+    set_fact:
+      mgmt_acl: "{{ mgmt_acl + [ {'sequence': (idx+1)*10 ,'grant': 'permit', 'protocol_options': {'tcp': {'ack': true}}, 'source': {'host': item.address.split('/')[0]}, 'destination': {'host': ansible_host, 'port_protocol': {'eq': '22'}} } ] }}"
+
+  - debug:
+      var: mgmt_acl
+
+  - name: Merge provided configuration with device configuration
+    cisco.ios.ios_acls:
+      config:
+      - afi: ipv4
+        acls:
+        - name: ACL-MGMT
+          acl_type: extended
+          aces: "{{ mgmt_acl }}"
+      state: overridden
+    register: acloutput
+    
+  - debug:
+      var: acloutput
+

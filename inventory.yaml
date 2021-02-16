@@ -1,22 +1,22 @@
 all:
   children:
-    core_ipvpn:
+    routers:
       vars:
         ansible_network_os: ios
         ansible_connection: network_cli
         ansible_user: lab
         ansible_password: lab
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -i /media/psf/Home/private/rhcasalab.key -W %h:%p -q root@w1.rhcasalab.com"'
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -i /media/psf/Home/private/rhcasalab.key -W %h:%p -q root@node1.rhcasalab.com"'
 
       hosts:
         r1:
-          ansible_host: 192.168.13.91
+          ansible_host: 192.168.20.91
         r2:
-          ansible_host: 192.168.13.92
+          ansible_host: 192.168.20.92
         r3:
-          ansible_host: 192.168.13.93
+          ansible_host: 192.168.20.93
         r4:
-          ansible_host: 192.168.13.94
+          ansible_host: 192.168.20.94
 
     windows:
       hosts:
