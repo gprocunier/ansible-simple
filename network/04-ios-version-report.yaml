@@ -1,0 +1,36 @@
+---
+- name: "Create reports of IOS versions"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+  - name: "Get router facts"
+    cisco.ios.ios_facts:
+      gather_subset: "!config"
+    register: router_facts
+  
+  - name: "Display router facts"
+    debug:
+      var: router_facts
+
+  - name: "Generate report page"
+    template:
+      src: "templates/report.html.j2"
+      dest: "report.html"
+    run_once: True
+
+  - name: Upload report to S3
+    amazon.aws.aws_s3:
+      bucket: mouimet-network-reports
+      object: "report.html"
+      src: "report.html"
+      mode: put
+      permission:
+        - public-read
+    check_mode: no
+    register: s3_upload
+
+- debug:
+    msg:
+      - "You can see the report at the following link:"
+      - "{{ s3_upload.url.split('?')[0] }}"

@@ -1,0 +1,40 @@
+<html>
+<title>Router report</title>
+<body>
+<h1>Report</h1>
+
+<table>
+    <tr>
+        <th>Hostname</th>
+        <th>Model</th>
+        <th>Serial number</th>
+        <th>OS type</th>
+        <th>OS version</th>
+    </tr>
+
+    {% for router in hostvars %}
+    <tr>
+        <td>{{ hostvars[router].ansible_facts.net_hostname }}</td>
+        <td>{{ hostvars[router].ansible_facts.net_model }}</td>
+        <td>{{ hostvars[router].ansible_facts.net_serialnum }}</td>
+        <td>{{ hostvars[router].ansible_facts.net_iostype }}</td>
+        <td>{{ hostvars[router].ansible_facts.net_version }}</td>
+    </tr>
+    {%endfor%}
+</table>
+
+</body>
+<style>
+    table, th, td {
+        padding: 3px;
+    }
+
+    table {
+        border: 1px solid rgb(204, 204, 204);
+    }
+
+    th {
+        background-color: rgb(200,200,200);
+    }
+</style>
+</html>
