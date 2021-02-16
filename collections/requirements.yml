@@ -3,3 +3,4 @@ collections:
   - name: cisco.ios
   - name: community.general
   - name: community.vmware
+  - name: amazon.aws
