@@ -1,4 +1,5 @@
 ---
 collections:
-- cisco.ios
-- amazon.aws
+  - name: cisco.ios
+  - name: community.general
+  - name: community.vmware
