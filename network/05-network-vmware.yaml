@@ -1,0 +1,16 @@
+---
+- name: "Create a new VLAN in Datacenter"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+  - name: "Create VLAN in ESXi"
+    community.vmware.vmware_portgroup:
+      hosts: "ns545929"
+      # hostname: "{{ esxi_hostname }}"
+      # username: "{{ esxi_username }}"
+      # password: "{{ esxi_password }}"
+      switch: "internal"
+      portgroup: "vlan{{ vlan_id }}"
+      vlan_id: "{{ vlan_id }}"
+    delegate_to: localhost

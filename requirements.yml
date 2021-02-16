@@ -1,4 +1,5 @@
 ---
 collections:
   - name: cisco.ios
-  - name: community.general.slack
+  - name: community.general
+  - name: community.vmware
