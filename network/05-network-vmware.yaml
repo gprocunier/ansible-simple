@@ -13,4 +13,15 @@
       switch: "internal"
       portgroup: "vlan{{ vlan_id }}"
       vlan_id: "{{ vlan_id }}"
+      validate_certs: no
     delegate_to: localhost
+    run_once: True
+
+  - name: "Create sub-interfaces on routers"
+    cisco.ios.ios_interfaces:
+      config:
+      - name: "GigabitEthernet3.{{ vlan_id }}"
+        description: "VMWare interface vlan {{ vlan_id }}"
+        enabled: true
+
+    
