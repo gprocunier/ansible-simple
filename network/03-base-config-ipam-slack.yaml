@@ -4,8 +4,11 @@
   gather_facts: no
   tasks:
 
-  - name: "Send slack notification"
-    
+  - name: Send notification config begin via Slack
+    community.general.slack:
+      token: T01DW2WQ2NM/B01N1MQQ7P0/uqqJgGNUNgV9dosgHDp5QfA5
+      msg: 'Configuration on {{ inventory_hostname }} begin'
+    delegate_to: localhost
 
   - name: "Get Jumppoint IPs from IPAM"
     uri:
@@ -61,3 +64,8 @@
   - debug:
       var: acloutput
 
+  - name: Send notification config completed via Slack
+    community.general.slack:
+      token: T01DW2WQ2NM/B01N1MQQ7P0/uqqJgGNUNgV9dosgHDp5QfA5
+      msg: 'Configuration on {{ inventory_hostname }} completed'
+    delegate_to: localhost
