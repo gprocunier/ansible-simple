@@ -1,0 +1,15 @@
+---
+- name: "Base configuration on all routers"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+  - name: Delete all ACL
+    cisco.ios.ios_acls:
+      state: deleted
+
+  - name: remove the motd banner
+    cisco.ios.ios_banner:
+      banner: motd
+      state: absent
+    
