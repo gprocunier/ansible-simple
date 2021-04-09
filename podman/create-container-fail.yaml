@@ -1,0 +1,14 @@
+---
+- name: "Create a container"
+  hosts: podman
+  gather_facts: no
+  tasks:
+
+  - name: Create a data container
+    containers.podman.podman_container:
+      name: podfail
+      image: centos:79
+      command: tail -f /dev/null
+      state: started
+    register: podman_create_output
+  
