@@ -4,3 +4,4 @@ collections:
   - name: community.general
   - name: community.vmware
   - name: amazon.aws
+  - name: containers.podman
